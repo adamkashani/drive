@@ -1,12 +1,18 @@
-package com.adam.drive.core.entity;
+package core.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.adam.drive.core.javaBean.FileBean;
+import org.hibernate.validator.constraints.Length;
+
+import core.Enum.UserStatus;
+import core.javaBean.FileBean;
+
 
 @Entity
 public class FileEntity {
@@ -21,6 +27,10 @@ public class FileEntity {
 //	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private UserEntity userEntity;
+	
+	@Enumerated(EnumType.STRING)
+	@Length(max=10)
+	private UserStatus userStatus;
 
 	public FileEntity() {
 		super();

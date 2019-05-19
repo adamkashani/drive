@@ -1,4 +1,4 @@
-package com.adam.drive.core.entity;
+package core.entity;
 
 import java.util.Set;
 
@@ -7,7 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.adam.drive.core.javaBean.User;
+import core.javaBean.User;
+
 
 @Entity
 public class UserEntity {

@@ -1,4 +1,4 @@
-package com.adam.drive.core.javaBean;
+package core.javaBean;
 
 public class User {
 
