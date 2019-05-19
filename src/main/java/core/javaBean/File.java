@@ -1,19 +1,19 @@
 package core.javaBean;
 
-public class FileBean {
+public class File {
 
 	private long id;
 	private String fileName;
 	private String pathToFile;
 
-	public FileBean(long id, String fileName, String pathToFile) {
+	public File(long id, String fileName, String pathToFile) {
 		super();
 		this.id = id;
 		this.fileName = fileName;
 		this.pathToFile = pathToFile;
 	}
 
-	public FileBean() {
+	public File() {
 		super();
 	}
 
@@ -62,7 +62,7 @@ public class FileBean {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		FileBean other = (FileBean) obj;
+		File other = (File) obj;
 		if (id != other.id)
 			return false;
 		return true;

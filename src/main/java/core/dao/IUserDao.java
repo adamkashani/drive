@@ -10,6 +10,8 @@ public interface IUserDao extends JpaRepository<UserEntity, Long> {
 
 	boolean existsByEmail(String email);
 	
+	boolean existsByName(String name);
+
 	UserEntity findByEmail(String email);
 
 	//login method

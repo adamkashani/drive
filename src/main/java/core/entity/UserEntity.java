@@ -4,21 +4,23 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import core.javaBean.User;
 
-
 @Entity
 public class UserEntity {
+
 	@Id
+	@GeneratedValue
 	private long id;
 	@Column(nullable = false)
 	private String name;
 	@Column(nullable = false)
 	private String password;
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String email;
 
 	@OneToMany(mappedBy = "userEntity")

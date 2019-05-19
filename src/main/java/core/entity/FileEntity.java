@@ -5,19 +5,21 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.validator.constraints.Length;
 
 import core.Enum.UserStatus;
-import core.javaBean.FileBean;
+import core.javaBean.File;
 
 
 @Entity
 public class FileEntity {
 
 	@Id
+	@GeneratedValue
 	private long id;
 	@Column(nullable = false)
 	private String fileName;
@@ -43,15 +45,15 @@ public class FileEntity {
 		this.pathToFile = pathToFile;
 	}
 
-	public FileEntity(FileBean fileBean) {
+	public FileEntity(File fileBean) {
 		super();
 		this.id = fileBean.getId();
 		this.fileName = fileBean.getFileName();
 		this.pathToFile = fileBean.getPathToFile();
 	}
 
-	public FileBean toBean() {
-		FileBean result = new FileBean();
+	public File toBean() {
+		File result = new File();
 		result.setId(id);
 		result.setFileName(fileName);
 		result.setPathToFile(pathToFile);
