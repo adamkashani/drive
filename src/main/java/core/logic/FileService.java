@@ -9,7 +9,6 @@ import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
@@ -26,38 +25,36 @@ import core.entity.FileEntity;
 import core.entity.UserEntity;
 import core.exception.DriveException;
 import core.exception.ErrorType;
+import core.util.PropertiesFile;
 
 @Service
-@PropertySource("file:file.properties")
 public class FileService {
 
-	final private static String PROPERTIES_FILE = "file.properties";
 	// path to root folder of this app (to save all client files)
-	@Value("${root}")
-	private String rootPath;
-	private Properties properties = new Properties();
 
 	CopyOption[] options = new CopyOption[] { StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES };
+	private String rootPath;
 
 	@Autowired
 	private IFileDao fileDao;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private PropertiesFile properties;
 
 	public FileService(IFileDao fileDao, UserService userService) {
 		super();
 		this.fileDao = fileDao;
 		this.userService = userService;
-		this.rootPath = getValueProperties("root");
 	}
 
 	public FileService() {
 		super();
-//		this.rootPath = getValueProperties("root");
 	}
 
 	@PostConstruct
 	public void print() {
+		this.rootPath = properties.getRootPath();
 		System.out.println(fileDao);
 
 	}
@@ -110,17 +107,17 @@ public class FileService {
 
 	}
 
-	private String getValueProperties(String ket) {
-		try (InputStream inputStream = new FileInputStream(PROPERTIES_FILE);) {
-			properties.load(inputStream);
-			return properties.getProperty(ket);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("failed to read from PROPERTIES_FILE");
-		}
-		return null;
-	}
+//	private String getValueProperties(String ket) {
+//		try (InputStream inputStream = new FileInputStream(PROPERTIES_FILE);) {
+//			properties.load(inputStream);
+//			return properties.getProperty(ket);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			System.out.println("failed to read from PROPERTIES_FILE");
+//		}
+//		return null;
+//	}
 
 	private boolean canDownload(String fileName, long userId) {
 		UserEntity user = userService.get(userId);
@@ -130,9 +127,7 @@ public class FileService {
 			}
 		}
 		return false;
-
 		// TODO Auto-generated method stub
-
 	}
 
 	public void removeByOwnerName(String owner) {
