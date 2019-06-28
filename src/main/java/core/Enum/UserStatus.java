@@ -1,7 +1,5 @@
 package core.Enum;
 
 public enum UserStatus {
-	
-	OWNER , SHAERD
-
+	OWNER, SHAERD
 }

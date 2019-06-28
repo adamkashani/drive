@@ -2,8 +2,10 @@ package core.entity;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -16,15 +18,19 @@ public class UserEntity {
 	@Id
 	@GeneratedValue
 	private long id;
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
 	@Column(nullable = false)
 	private String password;
 	@Column(nullable = false, unique = true)
 	private String email;
 
-	@OneToMany(mappedBy = "userEntity")
+	@OneToMany(mappedBy = "userEntity", cascade = { CascadeType.REMOVE, CascadeType.PERSIST }, fetch = FetchType.LAZY)
 	private Set<FileEntity> fileEntities;
+	
+	
+//	@OneToOne(mappedBy = "address")
+//    private TokenEntity tokenEntity;
 
 	public UserEntity(long id, String name, String password, String email) {
 		super();

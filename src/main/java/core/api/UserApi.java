@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import core.dao.IUserDao;
+import core.entity.UserEntity;
+import core.exception.DriveException;
 import core.javaBean.User;
 import core.javaBean.UserLogin;
 import core.logic.TokenService;
@@ -19,23 +22,26 @@ import core.logic.UserService;
 @RestController
 @RequestMapping("")
 public class UserApi {
-	
-	private static final int HOUR = 60*60;
+
+	private static final int HOUR = 60 * 60;
 
 	private UserService userService;
+
+	private IUserDao iUserDao;
 
 	private TokenService tokenService;
 
 	@Autowired
-	public UserApi(UserService userService, TokenService tokenService) {
+	public UserApi(UserService userService, TokenService tokenService, IUserDao iUserDao) {
 		super();
 		this.userService = userService;
 		this.tokenService = tokenService;
+		this.iUserDao = iUserDao;
 	}
 
 	@PostMapping
 	@RequestMapping("/registration")
-	public String create(@RequestBody User user) {
+	public String create(@RequestBody User user) throws DriveException {
 		System.out.println(user);
 		userService.create(user);
 		return "registration succeeded";
@@ -49,13 +55,15 @@ public class UserApi {
 		System.out.println(token);
 		cookie.setMaxAge(HOUR);
 		httpServletResponse.addCookie(cookie);
+//		UserEntity entity =  iUserDao.findByName(userLogin.getName());
+//		return entity.getFileEntities();
 		return "login succeeded";
 	}
 
 	@GetMapping
 	@RequestMapping(path = "/logout")
 	public String logout(@CookieValue(name = "token") String token) {
-		System.out.println("the token cookie : " + token);
+		System.out.println("from logout the token cookie : " + token);
 		tokenService.remove(token);
 		return "logout succeeded";
 	}

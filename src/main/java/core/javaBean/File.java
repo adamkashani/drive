@@ -5,12 +5,14 @@ public class File {
 	private long id;
 	private String fileName;
 	private String pathToFile;
+	private long lastModified;
 
-	public File(long id, String fileName, String pathToFile) {
+	public File(long id, String fileName, String pathToFile, long lastModified) {
 		super();
 		this.id = id;
 		this.fileName = fileName;
 		this.pathToFile = pathToFile;
+		this.lastModified = lastModified;
 	}
 
 	public File() {
@@ -41,9 +43,18 @@ public class File {
 		this.pathToFile = pathToFile;
 	}
 
+	public long getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(long lastModified) {
+		this.lastModified = lastModified;
+	}
+
 	@Override
 	public String toString() {
-		return "FileBean [id=" + id + ", fileName=" + fileName + ", pathToFile=" + pathToFile + "]";
+		return "File [id=" + id + ", fileName=" + fileName + ", pathToFile=" + pathToFile + ", lastModified="
+				+ lastModified + "]";
 	}
 
 	@Override
@@ -67,5 +78,4 @@ public class File {
 			return false;
 		return true;
 	}
-
 }

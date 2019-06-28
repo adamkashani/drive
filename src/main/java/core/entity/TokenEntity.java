@@ -17,6 +17,9 @@ public class TokenEntity {
 
 	@Column(nullable = false)
 	private long userId;
+	
+//	@OneToOne
+//	private UserEntity userEntity;
 
 	public TokenEntity() {
 	}

@@ -1,7 +1,6 @@
 package core.logic;
 
 import java.security.SecureRandom;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +44,7 @@ public class TokenService {
 	public TokenEntity findByToken(String token) {
 		TokenEntity tokenEntity = tokenDao.findByToken(token);
 		if (tokenEntity == null) {
-//			TODO throw new exception the token not exists
+			//			TODO throw new exception the token not exists
 		}
 		return tokenEntity;
 	}
@@ -56,6 +55,10 @@ public class TokenService {
 		random.nextBytes(bytes);
 		String token = String.valueOf(bytes);
 		return token;
+	}
+
+	public TokenEntity get(long id) {
+		return tokenDao.getOne(id);
 	}
 
 }
