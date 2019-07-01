@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,8 +12,6 @@ import java.nio.file.StandardCopyOption;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -22,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import core.dao.IFileDao;
 import core.entity.FileEntity;
+import core.entity.TokenEntity;
 import core.entity.UserEntity;
 import core.exception.DriveException;
 import core.exception.ErrorType;
@@ -40,6 +38,8 @@ public class FileService {
 	@Autowired
 	private UserService userService;
 	@Autowired
+	private TokenService tokenService;
+	@Autowired
 	private PropertiesFile properties;
 
 	public FileService(IFileDao fileDao, UserService userService) {
@@ -55,11 +55,28 @@ public class FileService {
 	@PostConstruct
 	public void print() {
 		this.rootPath = properties.getRootPath();
-		System.out.println(fileDao);
+
+//		System.out.println(userService.getClass().getAnnotations().length);
+//		Annotation[] annotations = FileService.class.getAnnotations();
+//		for (Annotation annotation : annotations) {
+//			
+//			System.out.println(annotation.annotationType().getSimpleName());
+//		}
+//		System.out.println(userService.getClass().getAnnotations().toString());
+//		System.out.println(fileDao);
 
 	}
 
-	public void uploadFile(MultipartFile file, String userName) {
+	public void uplodeFile(MultipartFile file, long tokenId) throws DriveException {
+		// get the token from DB
+		TokenEntity token = tokenService.get(tokenId);
+		// get the user from DB
+		UserEntity user = userService.get(token.getUserId());
+		// save the file in directory of user
+		save(file, user.getName());
+	}
+
+	public void save(MultipartFile file, String userName) {
 		File copy = new File(rootPath + "/" + userName + "/" + file.getOriginalFilename());
 		Path path = copy.toPath();
 		try {
@@ -71,11 +88,25 @@ public class FileService {
 		}
 	}
 
+	public Resource downloadFile(long tokenId, String fileName) throws DriveException {
+		// get the token from DB
+		TokenEntity token = tokenService.get(tokenId);
+		// get the user from DB
+		UserEntity user = userService.get(token.getUserId());
+		try {
+			return download(fileName, user.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new DriveException(e);
+		}
+	}
+
 	public Resource download(String fileName, long userId) throws Exception {
 
 		if (canDownload(fileName, userId)) {
 			FileEntity file = fileDao.findByFileName(fileName);
 			try {
+
 				return new InputStreamResource(new FileInputStream(file.getPathToFile()));
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -119,15 +150,22 @@ public class FileService {
 //		return null;
 //	}
 
+	// TODO need to do Test !!!
 	private boolean canDownload(String fileName, long userId) {
-		UserEntity user = userService.get(userId);
-		for (FileEntity file : user.getFileEntities()) {
-			if (file.getFileName().equals(fileName)) {
-				return true;
-			}
+//		UserEntity user = userService.get(userId);
+//		for (FileEntity file : user.getFileEntities()) {
+//			if (file.getFileName().equals(fileName)) {
+//				return true;
+//			}
+//		}
+//		return false;
+//		// TODO Auto-generated method stub
+		FileEntity file = fileDao.findByUserIdAndFileName(userId, fileName);
+		if (file != null) {
+			return true;
 		}
 		return false;
-		// TODO Auto-generated method stub
+
 	}
 
 	public void removeByOwnerName(String owner) {

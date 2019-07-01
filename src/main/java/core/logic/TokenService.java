@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import core.dao.ITokenDao;
 import core.entity.TokenEntity;
+import core.exception.DriveException;
+import core.exception.ErrorType;
 
 @Service
 public class TokenService {
@@ -44,7 +46,7 @@ public class TokenService {
 	public TokenEntity findByToken(String token) {
 		TokenEntity tokenEntity = tokenDao.findByToken(token);
 		if (tokenEntity == null) {
-			//			TODO throw new exception the token not exists
+			// TODO throw new exception the token not exists
 		}
 		return tokenEntity;
 	}
@@ -57,8 +59,13 @@ public class TokenService {
 		return token;
 	}
 
-	public TokenEntity get(long id) {
-		return tokenDao.getOne(id);
+	public TokenEntity get(long id) throws DriveException {
+		TokenEntity tokenEntity = null;
+		tokenEntity = tokenDao.getOne(id);
+		if (tokenEntity != null) {
+			return tokenEntity;
+		}
+		throw new DriveException(ErrorType.TOKEN_NOT_EXISTS);
 	}
 
 }

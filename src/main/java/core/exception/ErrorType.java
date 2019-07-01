@@ -10,6 +10,10 @@ public enum ErrorType {
 	SHORT_PASSWORD(403, "the password you insert short must at least four characters", false),
 	SHORT_NAME(403, "the name you insert short must at least four characters", false),
 	UNVALIDATED_NAME(403, "the name you insert unvalidated ", false),
+
+	// token exists
+	TOKEN_NOT_EXISTS(403, "the token not exists", true),
+
 	// file
 	FILE_NOT_EXISTS_ON_SET_FILES(403, "the file name you insert not exists", false);
 
